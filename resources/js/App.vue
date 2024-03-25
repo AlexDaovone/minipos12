@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h1>Hello VueJs3</h1>
+    <h1>Hello VueJs3 v2</h1>
   </div>
 </template>
 
