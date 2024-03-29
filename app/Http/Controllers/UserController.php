@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\hash;
 use App\Models\User;
+use JWTAuth;
+
 
 class UserController extends Controller
 {
@@ -18,21 +20,23 @@ class UserController extends Controller
             $check_email = User::where("email",$request->email);
 
             if($check_email->count()){
-
+                $success = false;
+                $message = "ອີເມວນີ້:".$request->email." ໄດ້ເຄີຍລົງທະບຽນແລ້ວ";
             }else{
+
+                $user = new User([
+                    "name" => $request->name,
+                    "email" => $request->email,
+                    "password" => hash::make($request->password)
+                ]);
+    
+                $user->save();
                 
+                $success = true;
+                $message = "ບັນທຶກຂໍ້ມູນສຳເລັດ!";
             }
 
-            $user = new User([
-                "name" => $request->name,
-                "email" => $request->email,
-                "password" => hash::make($request->password)
-            ]);
 
-            $user->save();
-            
-            $success = true;
-            $message = "ບັນທຶກຂໍ້ມູນສຳເລັດ!";
 
         }catch(\Illuminate\Database\QueryException $ex){
 
@@ -46,5 +50,31 @@ class UserController extends Controller
         ];
 
         return response()->json($response);
+    }
+
+
+    public function login(Request $request){
+
+        $user_login = [
+            "email"=>$request->email,
+            "password"=>$request->password
+        ];
+
+        $token = JWTAUTH::attempt($user_login); 
+        $user = Auth::user();
+
+        if(!$token){
+            return response()->json([
+                "success" => false,
+                "message" => "ອີເມວ ຫຼື ລະຫັດຜ່ານບໍ່ຖືກຕ້ອງ!!"
+            ]);
+        }else{
+            return response()->json([
+                "success" => true,
+                "message" => "ສຳເລັດ!",
+                "user" => $user,
+                "token" => $token
+            ]);
+        }
     }
 }

@@ -51,7 +51,7 @@
             </div>
 
             <div class="alert alert-danger" role="alert" v-if="show_error">
-            {{msg_error}}
+            {{ msg_error }} 
             </div>
             <div class="mb-3">
               <button class="btn btn-primary d-grid w-100" @click="Register()">ລົງທະບຽນ</button>
@@ -75,7 +75,7 @@
 <script>
 import axios from 'axios'
 
-export default {
+export default { 
   name: 'Minipos12Register',
 
   data() {
@@ -119,7 +119,7 @@ export default {
                         this.$router.push("/login")
                     }else{
                         this.show_error = true;
-                        this.msg_error = res.data.massage;
+                        this.msg_error = res.data.message;
 
                     }
                 }).catch((err)=>{
