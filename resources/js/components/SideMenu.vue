@@ -50,7 +50,7 @@
   <div class="menu-inner-shadow"></div>
 
   <ul class="menu-inner py-1">
-    
+
 
     <li class="menu-item">
       <router-link to="/"  class="menu-link">
@@ -58,6 +58,7 @@
           <div>Store</div>
       </router-link>
     </li>
+    
 
     <li class="menu-item">
       <router-link to="/pos" class="menu-link">

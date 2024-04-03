@@ -99,6 +99,11 @@ export default {
                     if(res.data.success){
                         this.password=''
                         this.email=''
+                        this.show_error = false;
+                        this.msg_error = '';
+
+                        localStorage.setItem("web_token", res.data.token)
+                        localStorage.setItem("web_user", JSON.stringify(res.data.user))
 
                         this.$router.push("/")
                     }else{
