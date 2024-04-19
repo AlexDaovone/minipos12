@@ -14,16 +14,33 @@ class StoreController extends Controller
     }
 
     public function index(){
-        $store = Store::orderBy("id","asc")->get();
-        return $store;
+
+        $sort = \Request::get("sort");
+        $list_num = \Request::get("list_num");
+        $search = \Request::get("search");
+
+        $store = Store::orderBy("id","$sort")
+        ->whereAny(["name","price_buy"],"LIKE","%{$search}%")
+        ->paginate($list_num)
+        ->toArray();
+        return array_reverse($store);
     }
 
     public function add(Request $request){
         try{
 
+            $upload_path = "assets/img";
+
+            if($request->file("image")){
+                $generate_new_name = time().".".$request->image->getClientOriginalExtension();
+                $request->image->move(public_path($upload_path),$generate_new_name);
+            }else{
+                $generate_new_name = "";
+            }
+
             $store = new Store([
                 "name" => $request->name,
-                // "image" => $request->image,
+                "image" => $generate_new_name,
                 "amount" => $request->amount,
                 "price_buy" => $request->price_buy,
                 "price_sell" => $request->price_sell,
@@ -55,19 +72,72 @@ class StoreController extends Controller
 
     public function edit($id){
         $store = Store::find($id);
+        // $store = Store::where("id",$id)->get()[0];
         return $store;
     }
 
     public function update($id,Request $request){
         try{
 
-            $store = store::find($id);
-            $store->update([
-                "name" => $request->name,
-                "amount" => $request->amount,
-                "price_buy" => $request->price_buy,
-                "price_sell" => $request->price_sell
-            ]);
+            $store = Store::find($id);
+
+            $upload_path = "assets/img";
+
+            //ກວດສອບຮູບພາບທີ່ສົ່ງມາ
+            if($request->file("image")){
+                if($store->image){
+                    if(file_exists($upload_path."/".$store->image)){
+                        unlink($upload_path."/".$store->image);
+                    }
+                }
+                //ອັບໂຫຼດໂຕໃຫມ່ແທນ
+                $generate_new_name = time().".".$request->image->getClientOriginalExtension();
+                $request->image->move(public_path($upload_path),$generate_new_name);
+
+                $store->update([
+                    "name" => $request->name,
+                    "image" => $generate_new_name,
+                    "amount" => $request->amount,
+                    "price_buy" => $request->price_buy,
+                    "price_sell" => $request->price_sell
+                ]);
+            }else{
+
+                
+
+                if($request->image){
+                    //ບໍ່ມີການເລືອກຮູບ
+                    $store->update([
+                        "name" => $request->name,
+                        // "image" => $generate_new_name,
+                        "amount" => $request->amount,
+                        "price_buy" => $request->price_buy,
+                        "price_sell" => $request->price_sell
+                    ]);
+                } else {
+                    //ລຶບຮູບອອກແລ້ວ
+
+                    if($store->image){
+                        if(file_exists($upload_path."/".$store->image)){
+                            unlink($upload_path."/".$store->image);
+                        }
+                    }
+
+                    $store->update([
+                        "name" => $request->name,
+                        "image" => "",
+                        "amount" => $request->amount,
+                        "price_buy" => $request->price_buy,
+                        "price_sell" => $request->price_sell
+                    ]);
+                }
+
+
+
+            }
+
+            
+
 
 
             $success = true;
@@ -94,7 +164,7 @@ class StoreController extends Controller
     public function delete($id){
         try{
 
-            $store = store::find($id);
+            $store = Store::find($id);
             $store->delete();
 
             $success = true;

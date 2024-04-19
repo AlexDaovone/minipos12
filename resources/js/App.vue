@@ -198,6 +198,15 @@ export default {
 
           }).catch((err)=>{
             console.log(err);
+                if(err){
+                    if(err.response.status == 401){
+                        this.store.remove_token()
+                        this.store.remove_user()
+                        localStorage.removeItem("web_token")
+                        localStorage.removeItem("web_user")
+                        this.$router.push("/login")
+                      }
+                    }
           });
       }
     

@@ -12,9 +12,12 @@
     },
     "dependencies": {
         "@vitejs/plugin-vue": "^5.0.4",
+        "cleave.js": "^1.6.0",
         "pinia": "^2.1.7",
         "vue": "^3.4.21",
+        "vue-cleave-component": "^3.0.2",
         "vue-loader": "^17.4.2",
-        "vue-router": "^4.3.0"
+        "vue-router": "^4.3.0",
+        "vue-sweetalert2": "^5.0.5"
     }
 }

@@ -24,7 +24,7 @@
 
             <div class="mb-3">
               <label for="email" class="form-label">ອີເມວ</label>
-              <input type="text" class="form-control" id="email" v-model="email"  placeholder="ປ້ອນອີເມວ">
+              <input type="text" class="form-control" id="email" v-model="email"  placeholder="ປ້ອນອີເມວ" @keyup.enter="login()">
             </div>
             <div class="mb-3 form-password-toggle">
               <div class="d-flex justify-content-between">
@@ -32,7 +32,7 @@
 
               </div>
               <div class="input-group input-group-merge">
-                <input type="password" id="password" class="form-control" v-model="password" placeholder="············" aria-describedby="ປ້ອນລະຫັດຜ່ານ">
+                <input type="password" id="password" class="form-control" v-model="password" placeholder="············" aria-describedby="ປ້ອນລະຫັດຜ່ານ" @keyup.enter="login()">
                 <span class="input-group-text cursor-pointer"><i class="bx bx-hide"></i></span>
               </div>
             </div>
